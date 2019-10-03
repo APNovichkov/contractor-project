@@ -1,0 +1,12 @@
+{% block content %}
+
+<h1>Inventory</h1>
+
+{% for product in products %}
+    <h2><a href='/store/{{ product._id }}'>{{product.name}}</a></h2>
+    <h3>{{product.description}}</h3>
+    <h5>${{product.price}}</h5>
+    <br>
+{% endfor %}
+
+{% endblock %}
