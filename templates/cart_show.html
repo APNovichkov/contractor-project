@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h4><a href="/">Back to home</a></h4>
+<h1>Your Cart:<h1>
+
+{% for product in cart_items %}
+    <h2>{{ product.name }}</h2>
+    <h3>{{ product.description }}</h3>
+    <h5>${{ product.price }}</h5>
+{% endfor %}
+
+{% endblock %}
