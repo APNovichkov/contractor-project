@@ -14,13 +14,19 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("inventory_show.html", products=products.find())
+    return render_template(
+        "inventory_show.html",
+        products=products.find(),
+        cart_size=cart.count())
 
 
 @app.route("/store/<product_id>")
 def show_product(product_id):
     # print("Product: {}".format(products.find({'_id': product_id})))
-    return render_template("product_show.html", product=products.find_one({'_id': ObjectId(product_id)}))
+    return render_template(
+        "product_show.html",
+        product=products.find_one({'_id': ObjectId(product_id)}),
+        cart_size=cart.count())
 
 @app.route("/store/<product_id>", methods=['POST'])
 def add_to_cart(product_id):
@@ -38,9 +44,15 @@ def add_to_cart(product_id):
 
 @app.route("/store/cart")
 def show_cart():
-    return render_template("cart_show.html", cart_items=cart.find())
+    return render_template(
+        "cart_show.html",
+        cart_items=cart.find(),
+        cart_size=cart.count())
 
-
+@app.route("/store/cart/<product_id>", methods=['POST'])
+def cart_item_delete(product_id):
+    cart.delete_one({'_id': ObjectId(product_id)})
+    return redirect(url_for("show_cart"))
 
 
 if __name__ == "__main__":
