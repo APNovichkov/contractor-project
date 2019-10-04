@@ -41,7 +41,7 @@ def add_to_cart(product_id):
     }
     products.find_one_and_update({'_id': ObjectId(product_id)}, {'$inc': {'inventory': -1}})
     cart.insert_one(product_to_add)
-    return redirect(url_for('index'))
+    return redirect(url_for('show_product', product_id=product_id))
 
 @app.route("/store/cart")
 def show_cart():

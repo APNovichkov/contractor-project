@@ -6,7 +6,7 @@
 <h1>Your Cart:<h1>
 
 {% for product in cart_items %}
-    <h2>{{ product.name }}</h2>
+    <h2><a href="/store/{{ product.product_id }}">{{ product.name }}</a></h2>
     <h3>{{ product.description }}</h3>
     <h5>${{ product.price }}</h5>
 
