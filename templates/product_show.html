@@ -2,9 +2,15 @@
 
 {% block content %}
 
+<br><br>
+
+<a href="/">Back to home</a>
+
 <h1>{{ product.name }}</h1>
 <h3>{{ product.description }}</h3>
 <h5>${{ product.price }}</h5>
+
+<h4>{{ product.inventory }} of these left!</h4>
 
 {% if product.inventory <= 10 %}
     <h3>Product is running low on supply!</h3>

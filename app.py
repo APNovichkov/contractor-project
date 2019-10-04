@@ -39,6 +39,7 @@ def add_to_cart(product_id):
         'description': products.find_one({'_id': ObjectId(product_id)})['description'],
         'inventory': products.find_one({'_id': ObjectId(product_id)})['inventory']
     }
+    products.find_one_and_update({'_id': ObjectId(product_id)}, {'$inc': {'inventory': -1}})
     cart.insert_one(product_to_add)
     return redirect(url_for('index'))
 
@@ -51,6 +52,7 @@ def show_cart():
 
 @app.route("/store/cart/<product_id>", methods=['POST'])
 def cart_item_delete(product_id):
+    products.find_one_and_update({'_id': ObjectId(cart.find_one({'_id': ObjectId(product_id)})['product_id'])}, {'$inc': {'inventory': 1}})
     cart.delete_one({'_id': ObjectId(product_id)})
     return redirect(url_for("show_cart"))
 
