@@ -14,8 +14,29 @@ app = Flask(__name__)
 def index():
     return render_template(
         "inventory_show.html",
-        products=products.find(),
+        product_list=products.find(),
         cart_size=cart.count())
+
+@app.route("/store/socks")
+def show_socks():
+    socks = products.find({'product_type': 'sock'})
+    return render_template(
+        "socks_show.html",
+        product_list=socks)
+
+@app.route("/store/shirts")
+def show_shirts():
+    shirts = products.find({'product_type': 'shirt'})
+    return render_template(
+        "shirts_show.html",
+        product_list=shirts)
+
+@app.route("/store/hoodies")
+def show_hoodies():
+    hoodies = products.find({'product_type': 'hoodie'})
+    return render_template(
+        "hoodies_show.html",
+        product_list=hoodies)
 
 
 @app.route("/store/<product_id>")
@@ -24,14 +45,15 @@ def show_product(product_id):
     return render_template(
         "product_show.html",
         product=products.find_one({'_id': ObjectId(product_id)}),
-        cart_size=cart.count())
+        cart_size=cart.count(),
+        message=request.args.get("message"))
 
 @app.route("/store/<product_id>", methods=['POST'])
 def add_to_cart(product_id):
     product_to_add = {
         'product_id': product_id,
         'name': products.find_one({'_id': ObjectId(product_id)})['name'],
-        'pic_id': products.find_one({'_id': ObjectId(product_id)})['pic_id'],
+        'pic_path': products.find_one({'_id': ObjectId(product_id)})['pic_path'],
         'price': products.find_one({'_id': ObjectId(product_id)})['price'],
         'reviews_id': products.find_one({'_id': ObjectId(product_id)})['reviews_id'],
         'description': products.find_one({'_id': ObjectId(product_id)})['description'],
@@ -45,7 +67,7 @@ def add_to_cart(product_id):
 def show_cart():
     return render_template(
         "cart_show.html",
-        cart_items=cart.find(),
+        product_list=cart.find(),
         cart_size=cart.count())
 
 @app.route("/store/cart/<product_id>", methods=['POST'])

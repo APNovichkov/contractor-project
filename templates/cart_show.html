@@ -2,18 +2,15 @@
 
 {% block content %}
 
-<h4><a href="/">Back to home</a></h4>
-<h1>Your Cart:<h1>
+<!-- <h4><a href="/">Back to home</a></h4> -->
+<div class="jumbotron text-center" style="background-color: #E8A87C;">
+    <div class="row">
+        <h1 style="color: #FFFFFF">Your Cart:</h1>
+        <h5>You know you want it ;)</h5>
+    </div>
+</div>
 
-{% for product in cart_items %}
-    <h2><a href="/store/{{ product.product_id }}">{{ product.name }}</a></h2>
-    <h3>{{ product.description }}</h3>
-    <h5>${{ product.price }}</h5>
+{% include "partials/general_product_show.html" %}
 
-    <p><form method='POST' action='/store/cart/{{ product._id }}'>
-        <input type='hidden' name='_method' value='DELETE'>
-        <button type='submit'>Delete</button>
-    </form></p>
-{% endfor %}
 
 {% endblock %}
