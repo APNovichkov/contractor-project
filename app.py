@@ -3,14 +3,12 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
 
-
 client = MongoClient()
 db = client['contractor']
 products = db['products']
 cart = db['cart']
 
 app = Flask(__name__)
-
 
 @app.route("/")
 def index():

@@ -2,16 +2,32 @@
 
 {% block content %}
 
-<h1>Inventory</h1>
+<div class="jumbotron text-center" style="background-color: #E8A87C;">
+    <div class="row">
+        <h1 style="color: #FFFFFF">Welcome to our Store!</h1>
+        <h5>Where the cool kids shop</h5>
+    </div>
+</div>
 
-{% for product in products %}
-    <h2><a href='/store/{{ product._id }}'>{{product.name}}</a></h2>
-    <h3>{{product.description}}</h3>
-    <h5>${{product.price}}</h5>
-    <form action="/store/{{ product._id }}" method="POST">
-        <input type="submit" value="Add to cart" />
-    </form>
-    <br>
-{% endfor %}
+<div class="container">
+    <div class="row text-center">
+        {% for product in products %}
+        <div class="col-md-12 text-center">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h2><a href='/store/{{ product._id }}'>{{product.name}}</a></h2></div>
+                <div class="panel-body">
+                    <img src="{{ product.pic_path }}" style="width: 10%">
+                    <h3>{{product.description}}</h3>
+                    <h5>${{product.price}}</h5>
+                    <form action="/store/{{ product._id }}" method="POST">
+                        <input type="submit" value="Add to cart" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 {% endblock %}
