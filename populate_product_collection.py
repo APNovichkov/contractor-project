@@ -1,15 +1,6 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
-client = MongoClient()
-db = client['contractor']
-products = db['products']
-
-print("Clearing the products collection in contractor db...")
-products.delete_many({})
-print("Cleared the products collection in contractor db")
-
-
 test_product_1 = {
     'product_type': 'sock',
     'name': 'Standard Hawaii Sock',
@@ -111,8 +102,15 @@ product_list = [
     test_product_8,
     test_product_9]
 
-products.insert_many(product_list)
+class SetupStore():
+    def __init__(self, products):
+        self.products = products
+        print("Clearing the products collection in contractor db...")
+        self.products.delete_many({})
+        print("Cleared the products collection in contractor db")
 
-print("Inserted these products: ")
-for product in products.find():
-    print(product)
+    def populate_products(self):
+        self.products.insert_many(product_list)
+        print("Inserted these products: ")
+        for product in self.products.find():
+            print(product)

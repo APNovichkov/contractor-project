@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from populate_product_collection import SetupStore
 import os
 
 host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/contractor')
@@ -8,6 +9,9 @@ client = MongoClient(host=f'{host}?retryWrites=false')
 db = client.get_default_database()
 products = db['products']
 cart = db['cart']
+
+st = SetupStore(products)
+st.populate_products()
 
 app = Flask(__name__)
 
@@ -23,6 +27,7 @@ def show_socks():
     socks = products.find({'product_type': 'sock'})
     return render_template(
         "socks_show.html",
+        cart_size=cart.count(),
         product_list=socks)
 
 @app.route("/store/shirts")
@@ -30,6 +35,7 @@ def show_shirts():
     shirts = products.find({'product_type': 'shirt'})
     return render_template(
         "shirts_show.html",
+        cart_size=cart.count(),
         product_list=shirts)
 
 @app.route("/store/hoodies")
@@ -37,6 +43,7 @@ def show_hoodies():
     hoodies = products.find({'product_type': 'hoodie'})
     return render_template(
         "hoodies_show.html",
+        cart_size=cart.count(),
         product_list=hoodies)
 
 
