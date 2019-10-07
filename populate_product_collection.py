@@ -105,11 +105,12 @@ product_list = [
 class SetupStore():
     def __init__(self, products):
         self.products = products
+
+    def populate_products(self):
         print("Clearing the products collection in contractor db...")
         self.products.delete_many({})
         print("Cleared the products collection in contractor db")
-
-    def populate_products(self):
+        
         self.products.insert_many(product_list)
         print("Inserted these products: ")
         for product in self.products.find():
