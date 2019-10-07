@@ -24,14 +24,18 @@
 
 -->
 
-<nav class="navbar navbar-default" style='margin-bottom: 0px'>
+<nav class="navbar navbar-default" style='margin-bottom: 0px; padding-top:6px'>
     <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="/">CoolGoods</a>
         </div>
-
-        <div class='pull-right'>
-            <a href='/store/cart' class='btn btn-success navbar-btn'>Cart ({{ cart_size }})</a>
+        <div class="pull-right">
+        <ul class="nav nav-pills" style="padding-top:4px">
+            <li role="presentation"><a href="/store/socks">Socks</a></li>
+            <li role="presentation"><a href="/store/shirts">Shirts</a></li>
+            <li role="presentation"><a href="/store/hoodies">Hoodies</a></li>
+            <li role="presentation" class="active"><a href='/store/cart'>Cart ({{ cart_size }})</a></li>
+        </ul>
         </div>
     </div>
 </nav>
