@@ -60,6 +60,11 @@ def add_review():
     reviews.insert_one(review)
     return redirect(url_for("show_product", product_id=review['product_id']))
 
+@app.route("/store/cart/checkout")
+def checkout_cart():
+    cart.delete_many({})
+    return redirect(url_for("show_cart"))
+
 
 @app.route("/store/<product_id>")
 def show_product(product_id):
