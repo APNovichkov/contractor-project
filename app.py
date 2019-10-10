@@ -5,6 +5,7 @@ from populate_product_collection import SetupStore
 import os
 import hashlib
 
+# instantialize mongo database and collections
 host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/contractor')
 client = MongoClient(host=f'{host}?retryWrites=false')
 db = client.get_default_database()
@@ -12,9 +13,7 @@ products = db['products']
 cart = db['cart']
 reviews = db['reviews']
 
-# Finish implementing Session
-# session = db['session']
-
+# setup the store. This populates the product database
 st = SetupStore(products)
 st.populate_products()
 
@@ -22,32 +21,15 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    """Return main inventory page."""
     return render_template(
         "inventory_show.html",
         product_list=products.find(),
         cart_size=cart.count_documents({}))
 
-@app.route("/login")
-def show_login():
-    return render_template(
-        "login_page.html")
-
-@app.route("/login", methods=['POST'])
-def process_login():
-    session_instance = {
-        'fullname': request.form.get('name'),
-        'username': request.form.get('username'),
-        'password': hashlib.sha224(request.form.get('password')).hexdigest()
-    }
-
-    session.insert_one(session_instance)
-
-    return redirect(url_for("index"))
-
-    return
-
 @app.route("/store/socks")
 def show_socks():
+    """Show the sock inventory page."""
     socks = products.find({'product_type': 'sock'})
     return render_template(
         "socks_show.html",
@@ -56,6 +38,7 @@ def show_socks():
 
 @app.route("/store/shirts")
 def show_shirts():
+    """Show the shirt inventory page."""
     shirts = products.find({'product_type': 'shirt'})
     return render_template(
         "shirts_show.html",
@@ -64,6 +47,7 @@ def show_shirts():
 
 @app.route("/store/hoodies")
 def show_hoodies():
+    """Show the hoodie inventory page."""
     hoodies = products.find({'product_type': 'hoodie'})
     return render_template(
         "hoodies_show.html",
@@ -72,8 +56,8 @@ def show_hoodies():
 
 @app.route("/store/review", methods=['POST'])
 def add_review():
-    print("HI!")
-
+    """Add reviews, gets variables from form."""
+    # create review based on form that comes in
     review = {
         'product_id': request.form.get('product_id'),
         'name': request.form.get('name'),
@@ -85,13 +69,14 @@ def add_review():
 
 @app.route("/store/cart/checkout")
 def checkout_cart():
+    """Checkout the cart."""
     cart.delete_many({})
     return redirect(url_for("show_cart"))
 
 
 @app.route("/store/<product_id>")
 def show_product(product_id):
-    # print("Product: {}".format(products.find({'_id': product_id})))
+    """Show an individual product by the product_id that comes in with the route."""
     return render_template(
         "product_show.html",
         product=products.find_one({'_id': ObjectId(product_id)}),
@@ -102,6 +87,8 @@ def show_product(product_id):
 
 @app.route("/store/<product_id>", methods=['POST'])
 def add_to_cart(product_id):
+    """Add product to cart collection based on the product id being passed with the route."""
+    # create product to add
     product_to_add = {
         'product_id': product_id,
         'name': products.find_one({'_id': ObjectId(product_id)})['name'],
@@ -111,13 +98,14 @@ def add_to_cart(product_id):
         'description': products.find_one({'_id': ObjectId(product_id)})['description'],
         'inventory': products.find_one({'_id': ObjectId(product_id)})['inventory']
     }
+    # subtract one from the product inventory size
     products.find_one_and_update({'_id': ObjectId(product_id)}, {'$inc': {'inventory': -1}})
     cart.insert_one(product_to_add)
     return redirect(url_for('show_product', product_id=product_id))
 
-
 @app.route("/store/cart")
 def show_cart():
+    """Show cart inventory."""
     return render_template(
         "cart_show.html",
         product_list=cart.find(),
@@ -125,6 +113,8 @@ def show_cart():
 
 @app.route("/store/cart/<product_id>", methods=['POST'])
 def cart_item_delete(product_id):
+    """Delete item from cart based on product id being passed with the route."""
+    # add one to the product inventory size
     products.find_one_and_update({'_id': ObjectId(cart.find_one({'_id': ObjectId(product_id)})['product_id'])}, {'$inc': {'inventory': 1}})
     cart.delete_one({'_id': ObjectId(product_id)})
     return redirect(url_for("show_cart"))

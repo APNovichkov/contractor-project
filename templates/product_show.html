@@ -10,8 +10,9 @@
             <div class="panel-body">
                 <img src="{{ product.pic_path }}" style="width: 10%">
                 <h3>{{product.description}}</h3>
+                <!-- Check if product is running low on inventory -->
                 {% if product.inventory <= 10 %}
-                    <h3>Product is running low on supply!</h3>
+                    <span class="label label-danger">Product is running low on supply!</span>
                 {% endif %}
                 <h5>${{product.price}}</h5>
                 <form action="/store/{{ product._id }}" method="POST">
