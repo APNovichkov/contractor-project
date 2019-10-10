@@ -3,7 +3,6 @@
 {% block content %}
 
 <div class="container" style="padding-top:20px">
-    <!-- <a href="/">Back to home</a> -->
     <div class="row text-center">
         <div class="panel panel-info">
             <div class="panel-heading"><h2><a href='/store/{{ product._id }}'>{{product.name}}</a></h2></div>
@@ -16,7 +15,9 @@
                 {% elif product.inventory <= 10 %}
                     <span class="label label-warning">Product is running low on supply!</span>
                 {% endif %}
+
                 <h5>${{product.price}}</h5>
+                <!-- Check if product is running low on inventory -->
                 {% if product.inventory > 0 %}
                     <form action="/store/{{ product._id }}" method="POST">
                         <input type="submit" class="btn btn-success" value="Add to cart" />
@@ -25,6 +26,7 @@
             </div>
         </div>
     </div>
+    <!-- Add review panel -->
     <div class="row text-center">
         <div class="panel panel-warning">
             <div class="panel-heading"><h2>Leave a review!</h2></div>
@@ -34,6 +36,7 @@
         </div>
     </div>
 
+    <!-- All reviews panel -->
     <div class="row text-center">
         <div class="panel panel-success">
             <div class="panel-heading"><h2>Reviews ({{ num_of_reviews }})</h2></div>

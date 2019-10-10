@@ -102,11 +102,15 @@ product_list = [
     test_product_8,
     test_product_9]
 
+
+# Class to setup the store when the app is run
 class SetupStore():
     def __init__(self, products, cart):
         self.products = products
         self.cart = cart
 
+    # Cleans product and cart collections and [opulates the products database with our items
+    # that you can find online
     def populate_products(self):
         print("Clearing the products collection in contractor db...")
         self.products.delete_many({})
@@ -120,8 +124,3 @@ class SetupStore():
         print("Inserted these products: ")
         for product in self.products.find():
             print(product)
-
-    def setup_store(self):
-        print("Clearing session collection in contractor DB...")
-        self.session.delete_many({})
-        print("cleared the session collection in contractor DB")

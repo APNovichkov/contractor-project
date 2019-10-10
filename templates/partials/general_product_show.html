@@ -1,7 +1,7 @@
 <div class="container" style="background-color: #85DCB">
     <div class="row text-center" style="padding-top:20px">
         <div class="product-grid">
-
+            <!-- Runs through all products -->
             {% for product in product_list %}
             <div class="col-md-12 text-center">
                 <div class="panel panel-info">
@@ -9,6 +9,7 @@
                     <div class="panel-body">
                         <img src="{{ product.pic_path }}" style="width: 10%">
                         <h3>{{product.description}}</h3>
+                        <!-- Checks if product is out of stock -->
                         {% if product.inventory <= 0 %}
                             <span class="label label-danger">Product is out of stock</span>
                         {% elif product.inventory <= 10 %}
@@ -16,7 +17,7 @@
                         {% endif %}
 
                         <h5>${{product.price}}</h5>
-
+                        <!-- Checks if product is out of stock -->
                         {% if product.inventory > 0 %}
                             <form action="/store/{{ product._id }}" method="POST">
                                 <input type="submit" class="btn btn-success" value="Add to cart" />
