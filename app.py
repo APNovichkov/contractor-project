@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from populate_product_collection import SetupStore
 import os
+import hashlib
 
 host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/contractor')
 client = MongoClient(host=f'{host}?retryWrites=false')
@@ -10,6 +11,9 @@ db = client.get_default_database()
 products = db['products']
 cart = db['cart']
 reviews = db['reviews']
+
+# Finish implementing Session
+# session = db['session']
 
 st = SetupStore(products)
 st.populate_products()
@@ -21,14 +25,33 @@ def index():
     return render_template(
         "inventory_show.html",
         product_list=products.find(),
-        cart_size=cart.count())
+        cart_size=cart.count_documents({}))
+
+@app.route("/login")
+def show_login():
+    return render_template(
+        "login_page.html")
+
+@app.route("/login", methods=['POST'])
+def process_login():
+    session_instance = {
+        'fullname': request.form.get('name'),
+        'username': request.form.get('username'),
+        'password': hashlib.sha224(request.form.get('password')).hexdigest()
+    }
+
+    session.insert_one(session_instance)
+
+    return redirect(url_for("index"))
+
+    return
 
 @app.route("/store/socks")
 def show_socks():
     socks = products.find({'product_type': 'sock'})
     return render_template(
         "socks_show.html",
-        cart_size=cart.count(),
+        cart_size=cart.count_documents({}),
         product_list=socks)
 
 @app.route("/store/shirts")
@@ -36,7 +59,7 @@ def show_shirts():
     shirts = products.find({'product_type': 'shirt'})
     return render_template(
         "shirts_show.html",
-        cart_size=cart.count(),
+        cart_size=cart.count_documents({}),
         product_list=shirts)
 
 @app.route("/store/hoodies")
@@ -44,7 +67,7 @@ def show_hoodies():
     hoodies = products.find({'product_type': 'hoodie'})
     return render_template(
         "hoodies_show.html",
-        cart_size=cart.count(),
+        cart_size=cart.count_documents({}),
         product_list=hoodies)
 
 @app.route("/store/review", methods=['POST'])
@@ -72,7 +95,7 @@ def show_product(product_id):
     return render_template(
         "product_show.html",
         product=products.find_one({'_id': ObjectId(product_id)}),
-        cart_size=cart.count(),
+        cart_size=cart.count_documents({}),
         reviews=reviews.find({'product_id': product_id}),
         num_of_reviews=reviews.find({'product_id': product_id}).count(),
         message=request.args.get("message"))
@@ -98,7 +121,7 @@ def show_cart():
     return render_template(
         "cart_show.html",
         product_list=cart.find(),
-        cart_size=cart.count())
+        cart_size=cart.count_documents({}))
 
 @app.route("/store/cart/<product_id>", methods=['POST'])
 def cart_item_delete(product_id):

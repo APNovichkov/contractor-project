@@ -110,8 +110,13 @@ class SetupStore():
         print("Clearing the products collection in contractor db...")
         self.products.delete_many({})
         print("Cleared the products collection in contractor db")
-        
+
         self.products.insert_many(product_list)
         print("Inserted these products: ")
         for product in self.products.find():
             print(product)
+
+    def setup_store(self):
+        print("Clearing session collection in contractor DB...")
+        self.session.delete_many({})
+        print("cleared the session collection in contractor DB")

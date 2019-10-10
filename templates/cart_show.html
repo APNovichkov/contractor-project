@@ -16,15 +16,15 @@
 
 <div class="container" style="background-color: #85DCB">
     <div class="row text-center" style="padding-top:20px">
-        {% for product in product_list %}
+        {% for cart_product in product_list %}
         <div class="col-md-12 text-center">
             <div class="panel panel-info">
-                <div class="panel-heading"><h2><a href='/store/{{ product._id }}'>{{product.name}}</a></h2></div>
+                <div class="panel-heading"><h2><a href='/store/{{ cart_product.product_id }}'>{{cart_product.name}}</a></h2></div>
                 <div class="panel-body">
-                    <img src="{{ product.pic_path }}" style="width: 10%">
-                    <h3>{{product.description}}</h3>
-                    <h5>${{product.price}}</h5>
-                    <form action="/store/cart/{{ product._id }}" method="POST">
+                    <img src="{{ cart_product.pic_path }}" style="width: 10%">
+                    <h3>{{cart_product.description}}</h3>
+                    <h5>${{cart_product.price}}</h5>
+                    <form action="/store/cart/{{ cart_product._id }}" method="POST">
                         <input type="submit" class="btn btn-success" value="Delete from Cart" />
                     </form>
                 </div>
