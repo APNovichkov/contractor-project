@@ -11,13 +11,17 @@
                 <img src="{{ product.pic_path }}" style="width: 10%">
                 <h3>{{product.description}}</h3>
                 <!-- Check if product is running low on inventory -->
-                {% if product.inventory <= 10 %}
-                    <span class="label label-danger">Product is running low on supply!</span>
+                {% if product.inventory <= 0 %}
+                    <span class="label label-danger">Product is out of stock</span>
+                {% elif product.inventory <= 10 %}
+                    <span class="label label-warning">Product is running low on supply!</span>
                 {% endif %}
                 <h5>${{product.price}}</h5>
-                <form action="/store/{{ product._id }}" method="POST">
-                    <input type="submit" class="btn btn-success" value="Add to cart"/>
-                </form>
+                {% if product.inventory > 0 %}
+                    <form action="/store/{{ product._id }}" method="POST">
+                        <input type="submit" class="btn btn-success" value="Add to cart" />
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@ cart = db['cart']
 reviews = db['reviews']
 
 # setup the store. This populates the product database
-st = SetupStore(products)
+st = SetupStore(products, cart)
 st.populate_products()
 
 app = Flask(__name__)
